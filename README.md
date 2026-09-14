@@ -1,56 +1,136 @@
-# Welcome to your Expo app 👋
+# Aarti Sangrah 🪔
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A text-only, offline-capable React Native (Expo) app for reading Marathi aarti lyrics during pooja. No audio, no ads, no internet required — just clean, legible devotional text organized by deity.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Browse aartis by deity (Ganesh, Vitthal, Shankar, Krishna, Ram, and more)
+- Search by aarti title or deity name
+- Adjustable font size for comfortable reading during an active pooja
+- Favorites and recently-viewed, saved locally
+- Light and dark theme
+- Fully offline — all content is bundled with the app, no server or connection needed
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
 
-2. Start the app
+- **Expo** (React Native, TypeScript)
+- **Expo Router** — file-based navigation
+- **Zustand** — state management (favorites, recents, settings)
+- **AsyncStorage** — local persistence
+- **expo-font** / `@expo-google-fonts` — Poppins (UI) and Noto Serif Devanagari (aarti text)
 
-   ```bash
-   npx expo start
-   ```
+## Project Structure
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+app/                    # Screens (Expo Router file-based routes)
+  (tabs)/               # Home, Categories, Search, Favorites, Settings
+  category/[deityId].tsx
+  aarti/[aartiId].tsx
+assets/
+  fonts/
+  icons/
+  illustrations/
+src/
+  theme/                # Colors, typography, spacing tokens
+  data/                 # aartis.json, deities.json
+  store/                # Zustand stores
+  components/           # Shared UI components
+  hooks/
+  utils/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Getting Started (Development)
 
-### Other setup steps
+### Prerequisites
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- [Node.js](https://nodejs.org/) — latest LTS version (v20.19.4 or newer)
+- npm (comes with Node.js)
+- An Android device or emulator for testing
 
-## Learn more
+### Setup
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+git clone <your-repo-url>
+cd Aarti-Sangrah
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Run in development (Expo Go)
 
-## Join the community
+```bash
+npx expo start
+```
 
-Join our community of developers creating universal apps.
+Scan the QR code with the **Expo Go** app (Android/iOS) to preview the app on your phone. Note: this requires your phone and computer to be on the same network, and it is *not* a standalone offline build — it's for quick testing only.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Building an Offline, Standalone APK
+
+To get an app that installs and runs fully offline on your phone (no computer, no Expo Go needed afterward), you have two options:
+
+### Option A — EAS Build (cloud, recommended)
+
+```bash
+npx eas-cli login
+npx eas-cli build:configure
+npx eas-cli build --platform android --profile preview
+```
+
+Ensure your `eas.json` preview profile is set to output an `.apk`:
+
+```json
+{
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  }
+}
+```
+
+Once the cloud build finishes, download the `.apk` link on your phone and install it (you'll need to allow "install from unknown sources" the first time).
+
+### Option B — Local build (Android Studio / IntelliJ IDEA)
+
+1. Install Android Studio or IntelliJ IDEA with the Android plugin, and the Android SDK.
+2. Set the `ANDROID_HOME` environment variable to your SDK path, and add `platform-tools` to your system `PATH`.
+3. Generate the native project:
+   ```bash
+   npx expo prebuild --platform android
+   ```
+4. Build the release APK from the `android` folder:
+   ```bash
+   cd android
+   ./gradlew clean
+   ./gradlew assembleRelease
+   ```
+5. The signed/unsigned APK will be at:
+   ```
+   android/app/build/outputs/apk/release/app-release.apk
+   ```
+6. Transfer it to your phone (USB, email, or cloud drive) and install.
+
+> **Note on signing:** a release build needs a signing key to be installable. Generate one with `keytool -genkeypair -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias` and configure it in `android/app/build.gradle` under `signingConfigs`, or sign the APK afterward with `apksigner`.
+
+## Troubleshooting
+
+**`ENOTEMPTY` error clearing Metro cache**
+Usually caused by antivirus locking files mid-write. Close all Metro/Expo processes, delete `%TEMP%\metro-cache` manually, and add your project folder + temp cache to your antivirus exclusions.
+
+**`[CXX5304] This version only understands SDK XML versions up to 3...`**
+Your installed NDK/CMake tooling is out of sync with your SDK Command-line Tools.
+1. In Android Studio/IntelliJ → SDK Manager → SDK Tools tab, update **NDK (Side by side)** and **CMake** to the latest.
+2. Clear stale CMake cache: delete every `.cxx` folder under `android/app` and any native module directories, then `./gradlew clean`.
+3. Confirm `android/local.properties` (`sdk.dir=...`) points to the same SDK path you updated in the IDE.
+
+**Node.js version warning during build**
+Update to the latest Node.js LTS from [nodejs.org](https://nodejs.org/).
+
+## Content Source
+
+Aarti lyrics are traditional Marathi devotional compositions, compiled for personal/offline reading use. If you're distributing this app publicly, double-check the text against a trusted printed source for accuracy.
+
+## License
+
+Personal project — add a license of your choice if you plan to publish this.
