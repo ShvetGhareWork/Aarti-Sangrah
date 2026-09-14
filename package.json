@@ -7,7 +7,7 @@
     "@expo-google-fonts/poppins": "^0.4.1",
     "@expo/ui": "~57.0.18",
     "@expo/vector-icons": "^15.1.1",
-    "@react-native-async-storage/async-storage": "^3.1.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~57.0.22",
     "expo-build-properties": "^57.0.17",
     "expo-constants": "~57.0.18",
@@ -34,6 +34,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@react-native-community/cli": "^20.2.0",
     "@types/react": "~19.2.2",
     "typescript": "~6.0.3"
   },
