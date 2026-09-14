@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,6 +18,7 @@ import { DeityCard } from '../../src/components/DeityCard';
 import { AartiCard } from '../../src/components/AartiCard';
 import { deities, getFeaturedAartis } from '../../src/utils/dataHelper';
 import { fonts, spacing } from '../../src/theme/theme';
+import { Aarti } from '../../src/types';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -27,16 +28,25 @@ export default function HomeScreen() {
   const t = getTranslation(lang);
 
   const featured = getFeaturedAartis();
-  const mainDeities = deities.slice(0, 8);
+  const mainDeities = deities.slice(0, 10);
 
-  const numColumns = width >= 900 ? 4 : width >= 600 ? 3 : 2;
   const gridCardWidth = width >= 900 ? '23.5%' : width >= 600 ? '31.5%' : '48%';
+
+  const renderFeaturedItem = useCallback(
+    ({ item }: { item: Aarti }) => (
+      <View style={styles.carouselCardWrapper}>
+        <AartiCard aarti={item} showDeityName={true} />
+      </View>
+    ),
+    []
+  );
 
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
+      removeClippedSubviews={true}
     >
       <View style={styles.responsiveWrapper}>
         {/* Devotional Greeting Header */}
@@ -51,7 +61,10 @@ export default function HomeScreen() {
           </View>
 
           <Pressable
-            style={[styles.historyBtn, { backgroundColor: colors.inputBackground }]}
+            style={({ pressed }) => [
+              styles.historyBtn,
+              { backgroundColor: colors.inputBackground, opacity: pressed ? 0.8 : 1 },
+            ]}
             onPress={() => router.push('/recents')}
           >
             <Feather name="clock" size={20} color={colors.primary} />
@@ -78,11 +91,11 @@ export default function HomeScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.carouselContainer}
-          renderItem={({ item }) => (
-            <View style={styles.carouselCardWrapper}>
-              <AartiCard aarti={item} showDeityName={true} />
-            </View>
-          )}
+          renderItem={renderFeaturedItem}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          windowSize={3}
+          removeClippedSubviews={true}
         />
 
         {/* Browse By Deity Grid */}

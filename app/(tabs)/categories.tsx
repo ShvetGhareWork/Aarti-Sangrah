@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, FlatList, View, useWindowDimensions } from 'react-native';
 import { DeityCard } from '../../src/components/DeityCard';
 import { deities } from '../../src/utils/dataHelper';
 import { useTheme } from '../../src/hooks/useTheme';
 import { spacing } from '../../src/theme/theme';
+import { Deity } from '../../src/types';
 
 export default function CategoriesScreen() {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
 
   const isWide = width >= 600;
+
+  const renderDeityItem = useCallback(
+    ({ item }: { item: Deity }) => (
+      <View style={isWide ? styles.wideItem : styles.fullItem}>
+        <DeityCard deity={item} variant="list" />
+      </View>
+    ),
+    [isWide]
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -20,13 +30,13 @@ export default function CategoriesScreen() {
           key={isWide ? 'wide-list' : 'narrow-list'}
           numColumns={isWide ? 2 : 1}
           columnWrapperStyle={isWide ? styles.columnWrapper : undefined}
-          renderItem={({ item }) => (
-            <View style={isWide ? styles.wideItem : styles.fullItem}>
-              <DeityCard deity={item} variant="list" />
-            </View>
-          )}
+          renderItem={renderDeityItem}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
+          initialNumToRender={12}
+          maxToRenderPerBatch={10}
+          windowSize={5}
+          removeClippedSubviews={true}
         />
       </View>
     </View>

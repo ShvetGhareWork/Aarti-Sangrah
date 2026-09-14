@@ -232,5 +232,17 @@
     "name": "हरितालिका",
     "nameEn": "Haritalika",
     "aartiCount": 1
+  },
+  {
+    "id": "swami-samarth",
+    "name": "स्वामी समर्थ",
+    "nameEn": "Swami Samarth",
+    "aartiCount": 1
+  },
+  {
+    "id": "nityanand",
+    "name": "नित्यानंद स्वामी",
+    "nameEn": "Nityanand Swami",
+    "aartiCount": 1
   }
 ]
