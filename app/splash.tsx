@@ -1,17 +1,45 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSettingsStore } from '../src/store';
 import { useTheme } from '../src/hooks/useTheme';
 import { getTranslation } from '../src/utils/i18n';
 import { fonts, spacing } from '../src/theme/theme';
 
 export default function SplashScreen() {
+  const router = useRouter();
   const { colors } = useTheme();
   const lang = useSettingsStore((state) => state.language);
+  const hasCompletedOnboarding = useSettingsStore(
+    (state) => state.hasCompletedOnboarding
+  );
   const t = getTranslation(lang);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (hasCompletedOnboarding) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/onboarding');
+      }
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, [hasCompletedOnboarding, router]);
+
+  const handleManualEnter = () => {
+    if (hasCompletedOnboarding) {
+      router.replace('/(tabs)');
+    } else {
+      router.replace('/onboarding');
+    }
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <Pressable
+      style={[styles.container, { backgroundColor: colors.background }]}
+      onPress={handleManualEnter}
+    >
       <View style={[styles.iconBadge, { backgroundColor: colors.primary }]}>
         <Text style={styles.icon}>🪔</Text>
       </View>
@@ -19,7 +47,7 @@ export default function SplashScreen() {
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         {t.tagline}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
