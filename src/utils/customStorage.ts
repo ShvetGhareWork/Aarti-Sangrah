@@ -1,8 +1,22 @@
 import { Platform } from 'react-native';
 import { StateStorage } from 'zustand/middleware';
 
-// In-memory fallback for environments where neither localStorage nor AsyncStorage native modules are present
 const memoryStorage: Record<string, string> = {};
+
+function getAsyncStorage() {
+  if (Platform.OS === 'web') {
+    return null;
+  }
+  try {
+    const AS = require('@react-native-async-storage/async-storage').default;
+    if (AS && typeof AS.getItem === 'function') {
+      return AS;
+    }
+  } catch (e) {
+    // Native module not available
+  }
+  return null;
+}
 
 export const customStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
@@ -12,17 +26,22 @@ export const customStorage: StateStorage = {
           return window.localStorage.getItem(name);
         }
       } catch (e) {
-        // Fallback silently without throwing or logging noisy warnings
+        // Fallback
       }
       return memoryStorage[name] || null;
     }
-    try {
-      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-      return await AsyncStorage.getItem(name);
-    } catch (e) {
-      return memoryStorage[name] || null;
+
+    const AS = getAsyncStorage();
+    if (AS) {
+      try {
+        return await AS.getItem(name);
+      } catch (e) {
+        // Fallback
+      }
     }
+    return memoryStorage[name] || null;
   },
+
   setItem: async (name: string, value: string): Promise<void> => {
     if (Platform.OS === 'web') {
       try {
@@ -31,18 +50,24 @@ export const customStorage: StateStorage = {
           return;
         }
       } catch (e) {
-        // Fallback silently without throwing
+        // Fallback
       }
       memoryStorage[name] = value;
       return;
     }
-    try {
-      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-      await AsyncStorage.setItem(name, value);
-    } catch (e) {
-      memoryStorage[name] = value;
+
+    const AS = getAsyncStorage();
+    if (AS) {
+      try {
+        await AS.setItem(name, value);
+        return;
+      } catch (e) {
+        // Fallback
+      }
     }
+    memoryStorage[name] = value;
   },
+
   removeItem: async (name: string): Promise<void> => {
     if (Platform.OS === 'web') {
       try {
@@ -51,16 +76,21 @@ export const customStorage: StateStorage = {
           return;
         }
       } catch (e) {
-        // Fallback silently
+        // Fallback
       }
       delete memoryStorage[name];
       return;
     }
-    try {
-      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-      await AsyncStorage.removeItem(name);
-    } catch (e) {
-      delete memoryStorage[name];
+
+    const AS = getAsyncStorage();
+    if (AS) {
+      try {
+        await AS.removeItem(name);
+        return;
+      } catch (e) {
+        // Fallback
+      }
     }
+    delete memoryStorage[name];
   },
 };

@@ -3,19 +3,22 @@ import aartisData from '../data/aartis.json';
 import { Aarti, Deity, Language } from '../types';
 import { translations } from './i18n';
 
-export const deities: Deity[] = deitiesData;
-export const aartis: Aarti[] = aartisData;
+export const deities: Deity[] = deitiesData || [];
+export const aartis: Aarti[] = aartisData || [];
 
 export const getDeityById = (id: string): Deity | undefined => {
-  return deities.find((d) => d.id === id);
+  if (!id) return undefined;
+  return deities.find((d) => d && d.id === id);
 };
 
 export const getAartiById = (id: string): Aarti | undefined => {
-  return aartis.find((a) => a.id === id);
+  if (!id) return undefined;
+  return aartis.find((a) => a && a.id === id);
 };
 
 export const getAartisByDeityId = (deityId: string): Aarti[] => {
-  return aartis.filter((a) => a.deityId === deityId);
+  if (!deityId) return [];
+  return aartis.filter((a) => a && a.deityId === deityId);
 };
 
 export const getFeaturedAartis = (): Aarti[] => {
@@ -29,25 +32,29 @@ export const getFeaturedAartis = (): Aarti[] => {
     'ram-aarti-1',
     'sainath-aarti'
   ];
-  return aartis.filter((a) => featuredIds.includes(a.id));
+  return aartis.filter((a) => a && featuredIds.includes(a.id));
 };
 
 export const searchAartisAndDeities = (query: string, lang: Language = 'mr') => {
-  const cleanQuery = query.trim().toLowerCase();
+  const cleanQuery = (query || '').trim().toLowerCase();
   if (!cleanQuery) return { aartis: [], deities: [] };
 
   const matchedDeities = deities.filter((d) => {
-    const nameMatch = d.name.toLowerCase().includes(cleanQuery);
+    if (!d) return false;
+    const nameMatch = d.name ? d.name.toLowerCase().includes(cleanQuery) : false;
     const nameEnMatch = d.nameEn ? d.nameEn.toLowerCase().includes(cleanQuery) : false;
     return nameMatch || nameEnMatch;
   });
 
   const matchedAartis = aartis.filter((a) => {
-    const titleMatch = a.title.toLowerCase().includes(cleanQuery);
+    if (!a) return false;
+    const titleMatch = a.title ? a.title.toLowerCase().includes(cleanQuery) : false;
     const titleEnMatch = a.titleEn ? a.titleEn.toLowerCase().includes(cleanQuery) : false;
+
     const deity = getDeityById(a.deityId);
-    const deityMatch = deity ? deity.name.toLowerCase().includes(cleanQuery) : false;
+    const deityMatch = deity && deity.name ? deity.name.toLowerCase().includes(cleanQuery) : false;
     const deityEnMatch = deity && deity.nameEn ? deity.nameEn.toLowerCase().includes(cleanQuery) : false;
+
     return titleMatch || titleEnMatch || deityMatch || deityEnMatch;
   });
 
