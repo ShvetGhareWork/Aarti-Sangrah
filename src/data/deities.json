@@ -38,7 +38,7 @@
   {
     "id": "devi",
     "name": "देवी",
-    "aartiCount": 9,
+    "aartiCount": 7,
     "nameEn": "Durga / Devi"
   },
   {
@@ -192,51 +192,45 @@
     "nameEn": "Sreepada Srevallabha"
   },
   {
-    "id": "swami-samarth",
-    "name": "स्वामी समर्थ",
-    "aartiCount": 1,
-    "nameEn": "Swami Samarth"
-  },
-  {
-    "id": "mangalagauri",
-    "name": "मंगळागौरी",
-    "aartiCount": 1,
-    "nameEn": "Mangalagauri"
-  },
-  {
-    "id": "haritalika",
-    "name": "हरितालिका",
-    "aartiCount": 1,
-    "nameEn": "Haritalika"
-  },
-  {
     "id": "kalbhairav",
-    "name": "काळभैरव",
-    "aartiCount": 1,
-    "nameEn": "Kalbhairav"
+    "name": "कालभैरव",
+    "nameEn": "Kalbhairav",
+    "aartiCount": 1
   },
   {
     "id": "navnath",
     "name": "नवनाथ",
-    "aartiCount": 1,
-    "nameEn": "Navnath"
+    "nameEn": "Navnath",
+    "aartiCount": 1
   },
   {
     "id": "tuljabhavani",
-    "name": "तुळजाभवानी",
-    "aartiCount": 1,
-    "nameEn": "Tulja Bhavani"
+    "name": "तुलजाभवानी",
+    "nameEn": "Tuljabhavani",
+    "aartiCount": 1
   },
   {
-    "id": "renuka-mata",
+    "id": "renuka",
     "name": "रेणुका माता",
-    "aartiCount": 1,
-    "nameEn": "Renuka Mata"
+    "nameEn": "Renuka Mata",
+    "aartiCount": 1
   },
   {
     "id": "ekvira",
-    "name": "एकवीरा",
-    "aartiCount": 1,
-    "nameEn": "Ekvira"
+    "name": "एकविरा",
+    "nameEn": "Ekvira Mata",
+    "aartiCount": 1
+  },
+  {
+    "id": "mangalagauri-deity",
+    "name": "मंगळागौरी",
+    "nameEn": "Mangalagauri",
+    "aartiCount": 1
+  },
+  {
+    "id": "haritalika-deity",
+    "name": "हरितालिका",
+    "nameEn": "Haritalika",
+    "aartiCount": 1
   }
 ]
