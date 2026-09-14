@@ -1,13 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SettingsState, FavoritesState, RecentsState } from '../types';
+import { customStorage } from '../utils/customStorage';
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       themeMode: 'light',
       fontSize: 19,
+      language: 'mr',
       hasCompletedOnboarding: false,
       setThemeMode: (themeMode) => set({ themeMode }),
       toggleTheme: () =>
@@ -17,12 +18,15 @@ export const useSettingsStore = create<SettingsState>()(
         set((state) => ({ fontSize: Math.min(32, state.fontSize + 2) })),
       decreaseFontSize: () =>
         set((state) => ({ fontSize: Math.max(14, state.fontSize - 2) })),
+      setLanguage: (language) => set({ language }),
+      toggleLanguage: () =>
+        set((state) => ({ language: state.language === 'mr' ? 'en' : 'mr' })),
       setHasCompletedOnboarding: (hasCompletedOnboarding) =>
         set({ hasCompletedOnboarding }),
     }),
     {
       name: 'aarti-settings-storage',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => customStorage),
     }
   )
 );
@@ -53,7 +57,7 @@ export const useFavoritesStore = create<FavoritesState>()(
     }),
     {
       name: 'aarti-favorites-storage',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => customStorage),
     }
   )
 );
@@ -71,7 +75,7 @@ export const useRecentsStore = create<RecentsState>()(
     }),
     {
       name: 'aarti-recents-storage',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => customStorage),
     }
   )
 );

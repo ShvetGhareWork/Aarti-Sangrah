@@ -1,34 +1,194 @@
 [
-  { "id": "ganesh", "name": "गणपती", "aartiCount": 6 },
-  { "id": "datta", "name": "दत्त", "aartiCount": 1 },
-  { "id": "vitthal", "name": "विठ्ठल", "aartiCount": 4 },
-  { "id": "shankar", "name": "शंकर", "aartiCount": 3 },
-  { "id": "vyankatesh", "name": "व्यंकटेश", "aartiCount": 1 },
-  { "id": "ananta", "name": "अनंत", "aartiCount": 1 },
-  { "id": "devi", "name": "देवी", "aartiCount": 9 },
-  { "id": "pasaydan", "name": "पसायदान", "aartiCount": 1 },
-  { "id": "krishna", "name": "कृष्ण", "aartiCount": 5 },
-  { "id": "bhagwat", "name": "भागवत", "aartiCount": 1 },
-  { "id": "sadguru", "name": "सद्गुरु", "aartiCount": 3 },
-  { "id": "ram", "name": "राम", "aartiCount": 6 },
-  { "id": "ramdas", "name": "रामदास", "aartiCount": 3 },
-  { "id": "tukaram", "name": "तुकाराम", "aartiCount": 3 },
-  { "id": "eknath", "name": "एकनाथ", "aartiCount": 1 },
-  { "id": "shanidev", "name": "शनिदेव", "aartiCount": 1 },
-  { "id": "vatsavitri", "name": "वटसावित्री", "aartiCount": 1 },
-  { "id": "kankad", "name": "कांकड आरती", "aartiCount": 3 },
-  { "id": "samanya-pooja", "name": "सामान्य पूजा आरत्या", "aartiCount": 10 },
-  { "id": "gajanan-maharaj", "name": "गजानन महाराज", "aartiCount": 1 },
-  { "id": "hanuman", "name": "हनुमान", "aartiCount": 1 },
-  { "id": "atmaram", "name": "आत्माराम", "aartiCount": 1 },
-  { "id": "sainath", "name": "साईनाथ", "aartiCount": 1 },
-  { "id": "parshuram", "name": "परशुराम", "aartiCount": 1 },
-  { "id": "tulsimata", "name": "तुळस", "aartiCount": 1 },
-  { "id": "vishnu", "name": "विष्णू", "aartiCount": 1 },
-  { "id": "khandoba", "name": "खंडोबा", "aartiCount": 1 },
-  { "id": "geeta", "name": "गीता", "aartiCount": 1 },
-  { "id": "satyanarayan", "name": "सत्यनारायण", "aartiCount": 1 },
-  { "id": "dnyaneshwar", "name": "ज्ञानेश्वर", "aartiCount": 1 },
-  { "id": "namdev", "name": "नामदेव", "aartiCount": 1 },
-  { "id": "padvallabh", "name": "पादवल्लभ", "aartiCount": 1 }
+  {
+    "id": "ganesh",
+    "name": "गणपती",
+    "aartiCount": 6,
+    "nameEn": "Ganesh"
+  },
+  {
+    "id": "datta",
+    "name": "दत्त",
+    "aartiCount": 1,
+    "nameEn": "Datta"
+  },
+  {
+    "id": "vitthal",
+    "name": "विठ्ठल",
+    "aartiCount": 4,
+    "nameEn": "Vitthal"
+  },
+  {
+    "id": "shankar",
+    "name": "शंकर",
+    "aartiCount": 3,
+    "nameEn": "Shankar / Shiva"
+  },
+  {
+    "id": "vyankatesh",
+    "name": "व्यंकटेश",
+    "aartiCount": 1,
+    "nameEn": "Vyankatesh"
+  },
+  {
+    "id": "ananta",
+    "name": "अनंत",
+    "aartiCount": 1,
+    "nameEn": "Ananta"
+  },
+  {
+    "id": "devi",
+    "name": "देवी",
+    "aartiCount": 9,
+    "nameEn": "Durga / Devi"
+  },
+  {
+    "id": "pasaydan",
+    "name": "पसायदान",
+    "aartiCount": 1,
+    "nameEn": "Pasaydan"
+  },
+  {
+    "id": "krishna",
+    "name": "कृष्ण",
+    "aartiCount": 5,
+    "nameEn": "Krishna"
+  },
+  {
+    "id": "bhagwat",
+    "name": "भागवत",
+    "aartiCount": 1,
+    "nameEn": "Bhagwat"
+  },
+  {
+    "id": "sadguru",
+    "name": "सद्गुरु",
+    "aartiCount": 3,
+    "nameEn": "Sadguru"
+  },
+  {
+    "id": "ram",
+    "name": "राम",
+    "aartiCount": 6,
+    "nameEn": "Ram"
+  },
+  {
+    "id": "ramdas",
+    "name": "रामदास",
+    "aartiCount": 3,
+    "nameEn": "Ramdas"
+  },
+  {
+    "id": "tukaram",
+    "name": "तुकाराम",
+    "aartiCount": 3,
+    "nameEn": "Tukaram"
+  },
+  {
+    "id": "eknath",
+    "name": "एकनाथ",
+    "aartiCount": 1,
+    "nameEn": "Eknath"
+  },
+  {
+    "id": "shanidev",
+    "name": "शनिदेव",
+    "aartiCount": 1,
+    "nameEn": "Shanidev"
+  },
+  {
+    "id": "vatsavitri",
+    "name": "वटसावित्री",
+    "aartiCount": 1,
+    "nameEn": "Vat Savitri"
+  },
+  {
+    "id": "kankad",
+    "name": "कांकड आरती",
+    "aartiCount": 3,
+    "nameEn": "Kankad Aarti"
+  },
+  {
+    "id": "samanya-pooja",
+    "name": "सामान्य पूजा आरत्या",
+    "aartiCount": 10,
+    "nameEn": "General Ritual Aartis"
+  },
+  {
+    "id": "gajanan-maharaj",
+    "name": "गजानन महाराज",
+    "aartiCount": 1,
+    "nameEn": "Gajanan Maharaj"
+  },
+  {
+    "id": "hanuman",
+    "name": "हनुमान",
+    "aartiCount": 1,
+    "nameEn": "Hanuman"
+  },
+  {
+    "id": "atmaram",
+    "name": "आत्माराम",
+    "aartiCount": 1,
+    "nameEn": "Atmaram"
+  },
+  {
+    "id": "sainath",
+    "name": "साईनाथ",
+    "aartiCount": 1,
+    "nameEn": "Sainath"
+  },
+  {
+    "id": "parshuram",
+    "name": "परशुराम",
+    "aartiCount": 1,
+    "nameEn": "Parshuram"
+  },
+  {
+    "id": "tulsimata",
+    "name": "तुळस",
+    "aartiCount": 1,
+    "nameEn": "Tulsi"
+  },
+  {
+    "id": "vishnu",
+    "name": "विष्णू",
+    "aartiCount": 1,
+    "nameEn": "Vishnu"
+  },
+  {
+    "id": "khandoba",
+    "name": "खंडोबा",
+    "aartiCount": 1,
+    "nameEn": "Khandoba"
+  },
+  {
+    "id": "geeta",
+    "name": "गीता",
+    "aartiCount": 1,
+    "nameEn": "Geeta"
+  },
+  {
+    "id": "satyanarayan",
+    "name": "सत्यनारायण",
+    "aartiCount": 1,
+    "nameEn": "Satyanarayan"
+  },
+  {
+    "id": "dnyaneshwar",
+    "name": "ज्ञानेश्वर",
+    "aartiCount": 1,
+    "nameEn": "Dnyaneshwar"
+  },
+  {
+    "id": "namdev",
+    "name": "नामदेव",
+    "aartiCount": 1,
+    "nameEn": "Namdev"
+  },
+  {
+    "id": "padvallabh",
+    "name": "पादवल्लभ",
+    "aartiCount": 1,
+    "nameEn": "Sreepada Srevallabha"
+  }
 ]

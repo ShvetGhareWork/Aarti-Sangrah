@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, TextInput, View, Pressable } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks/useTheme';
+import { useSettingsStore } from '../store';
+import { getTranslation } from '../utils/i18n';
 import { borderRadius, fonts, spacing } from '../theme/theme';
 
 interface SearchBarProps {
@@ -15,11 +17,15 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChangeText,
-  placeholder = 'आरती किंवा देवाचे नाव शोधा...',
+  placeholder,
   onFocus,
   editable = true,
 }) => {
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
+  const t = getTranslation(lang);
+
+  const defaultPlaceholder = placeholder || t.searchPlaceholder;
 
   return (
     <View
@@ -36,7 +42,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         style={[styles.input, { color: colors.textPrimary }]}
         value={value}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={defaultPlaceholder}
         placeholderTextColor={colors.textSecondary}
         onFocus={onFocus}
         editable={editable}

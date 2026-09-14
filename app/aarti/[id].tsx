@@ -6,13 +6,14 @@ import { getAartiById, getDeityById } from '../../src/utils/dataHelper';
 import { useSettingsStore, useFavoritesStore, useRecentsStore } from '../../src/store';
 import { useTheme } from '../../src/hooks/useTheme';
 import { FloatingFontSizeControl } from '../../src/components/FloatingFontSizeControl';
-import { fonts, spacing, borderRadius } from '../../src/theme/theme';
+import { fonts, spacing } from '../../src/theme/theme';
 
 export default function AartiDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
 
   const fontSize = useSettingsStore((state) => state.fontSize);
+  const lang = useSettingsStore((state) => state.language);
   const isFav = useFavoritesStore((state) => (id ? state.isFavorite(id) : false));
   const toggleFav = useFavoritesStore((state) => state.toggleFavorite);
   const addRecent = useRecentsStore((state) => state.addRecent);
@@ -36,11 +37,15 @@ export default function AartiDetailScreen() {
     );
   }
 
+  const title = lang === 'en' && aarti.titleEn ? aarti.titleEn : aarti.title;
+  const deityName = deity ? (lang === 'en' && deity.nameEn ? deity.nameEn : deity.name) : '';
+  const lyrics = lang === 'en' && aarti.lyricsEn && aarti.lyricsEn.length > 0 ? aarti.lyricsEn : aarti.lyrics;
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Stack.Screen
         options={{
-          title: aarti.title,
+          title: title,
           headerRight: () => (
             <Pressable
               hitSlop={12}
@@ -62,40 +67,39 @@ export default function AartiDetailScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Subtle Devanagari Title & Deity Subheader */}
-        <View style={styles.aartiHeader}>
-          {deity && (
-            <Text style={[styles.deityTag, { color: colors.accent }]}>
-              {deity.name}
+        <View style={styles.responsiveWrapper}>
+          <View style={styles.aartiHeader}>
+            {deity && (
+              <Text style={[styles.deityTag, { color: colors.accent }]}>
+                {deityName}
+              </Text>
+            )}
+            <Text style={[styles.aartiTitle, { color: colors.primary }]}>
+              {title}
             </Text>
-          )}
-          <Text style={[styles.aartiTitle, { color: colors.primary }]}>
-            {aarti.title}
-          </Text>
-          <View style={[styles.headerDivider, { backgroundColor: colors.cardBorder }]} />
-        </View>
+            <View style={[styles.headerDivider, { backgroundColor: colors.cardBorder }]} />
+          </View>
 
-        {/* Clean Reading Area (Strictly zero audio controls) */}
-        <View style={styles.lyricsContainer}>
-          {aarti.lyrics.map((line, index) => (
-            <Text
-              key={index}
-              style={[
-                styles.lyricLine,
-                {
-                  color: colors.textPrimary,
-                  fontSize: fontSize,
-                  lineHeight: Math.round(fontSize * 1.8),
-                },
-              ]}
-            >
-              {line}
-            </Text>
-          ))}
+          <View style={styles.lyricsContainer}>
+            {lyrics.map((line, index) => (
+              <Text
+                key={index}
+                style={[
+                  styles.lyricLine,
+                  {
+                    color: colors.textPrimary,
+                    fontSize: fontSize,
+                    lineHeight: Math.round(fontSize * 1.8),
+                  },
+                ]}
+              >
+                {line}
+              </Text>
+            ))}
+          </View>
         </View>
       </ScrollView>
 
-      {/* Floating Font Size Controls (A- / A+) */}
       <FloatingFontSizeControl />
     </View>
   );
@@ -118,7 +122,12 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: spacing.lg,
-    paddingBottom: 100, // Extra space so floating font control doesn't obscure last lines
+    paddingBottom: 100,
+    alignItems: 'center',
+  },
+  responsiveWrapper: {
+    width: '100%',
+    maxWidth: 720,
   },
   aartiHeader: {
     alignItems: 'center',

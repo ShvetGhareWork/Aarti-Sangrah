@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { Aarti } from '../types';
 import { useTheme } from '../hooks/useTheme';
 import { borderRadius, fonts, spacing } from '../theme/theme';
-import { useFavoritesStore } from '../store';
+import { useFavoritesStore, useSettingsStore } from '../store';
 import { getDeityById } from '../utils/dataHelper';
 
 interface AartiCardProps {
@@ -16,9 +16,14 @@ interface AartiCardProps {
 export const AartiCard: React.FC<AartiCardProps> = ({ aarti, showDeityName = true }) => {
   const router = useRouter();
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
   const isFav = useFavoritesStore((state) => state.isFavorite(aarti.id));
   const toggleFav = useFavoritesStore((state) => state.toggleFavorite);
   const deity = getDeityById(aarti.deityId);
+
+  const displayTitle = lang === 'en' && aarti.titleEn ? aarti.titleEn : aarti.title;
+  const displayDeityName = deity ? (lang === 'en' && deity.nameEn ? deity.nameEn : deity.name) : '';
+  const displayPreview = lang === 'en' && aarti.lyricsEn && aarti.lyricsEn[0] ? aarti.lyricsEn[0] : (aarti.lyrics[0] || '');
 
   return (
     <Pressable
@@ -37,14 +42,14 @@ export const AartiCard: React.FC<AartiCardProps> = ({ aarti, showDeityName = tru
         <View style={styles.textContainer}>
           {showDeityName && deity && (
             <Text style={[styles.deityName, { color: colors.accent }]}>
-              {deity.name}
+              {displayDeityName}
             </Text>
           )}
           <Text style={[styles.title, { color: colors.textPrimary }]} numberOfLines={1}>
-            {aarti.title}
+            {displayTitle}
           </Text>
           <Text style={[styles.preview, { color: colors.textSecondary }]} numberOfLines={1}>
-            {aarti.lyrics[0] || ''}
+            {displayPreview}
           </Text>
         </View>
 

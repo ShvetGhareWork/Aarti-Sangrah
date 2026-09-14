@@ -1,15 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { SwipeableFavoriteCard } from '../../src/components/SwipeableFavoriteCard';
-import { useFavoritesStore } from '../../src/store';
+import { useFavoritesStore, useSettingsStore } from '../../src/store';
 import { getAartiById } from '../../src/utils/dataHelper';
 import { useTheme } from '../../src/hooks/useTheme';
-import { fonts, spacing, borderRadius } from '../../src/theme/theme';
+import { getTranslation } from '../../src/utils/i18n';
+import { fonts, spacing } from '../../src/theme/theme';
 
 export default function FavoritesScreen() {
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
   const favoriteIds = useFavoritesStore((state) => state.favoriteIds);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
+  const t = getTranslation(lang);
 
   const favAartis = favoriteIds
     .map((id) => getAartiById(id))
@@ -17,27 +20,29 @@ export default function FavoritesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {favAartis.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyIcon}>⭐</Text>
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
-            कोणतीही आरती जोडलेली नाही
-          </Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
-            तुमच्या आवडीच्या आरती जवळील बुकमार्क चिन्हावर क्लिक करून इथे साठवा.
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={favAartis}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <SwipeableFavoriteCard aarti={item} onRemove={removeFavorite} />
-          )}
-          contentContainerStyle={styles.listContainer}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      <View style={styles.responsiveWrapper}>
+        {favAartis.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyIcon}>⭐</Text>
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
+              {t.noFavoritesTitle}
+            </Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
+              {t.noFavoritesSub}
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={favAartis}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <SwipeableFavoriteCard aarti={item} onRemove={removeFavorite} />
+            )}
+            contentContainerStyle={styles.listContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -45,6 +50,12 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+  },
+  responsiveWrapper: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 720,
   },
   listContainer: {
     padding: spacing.md,

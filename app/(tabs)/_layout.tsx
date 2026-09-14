@@ -2,9 +2,13 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../../src/hooks/useTheme';
+import { useSettingsStore } from '../../src/store';
+import { getTranslation } from '../../src/utils/i18n';
 
 export default function TabLayout() {
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
+  const t = getTranslation(lang);
 
   return (
     <Tabs
@@ -35,8 +39,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'मुख्यपृष्ठ',
-          tabBarLabel: 'गृह',
+          title: t.appName,
+          tabBarLabel: t.tabHome,
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
@@ -45,8 +49,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="categories"
         options={{
-          title: 'सर्व देवता',
-          tabBarLabel: 'श्रेणी',
+          title: t.categories,
+          tabBarLabel: t.tabCategories,
           tabBarIcon: ({ color, size }) => (
             <Feather name="grid" size={size} color={color} />
           ),
@@ -55,8 +59,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="favorites"
         options={{
-          title: 'आवडत्या आरत्या',
-          tabBarLabel: 'आवडत्या',
+          title: t.favoritesTitle,
+          tabBarLabel: t.tabFavorites,
           tabBarIcon: ({ color, size }) => (
             <Feather name="bookmark" size={size} color={color} />
           ),
@@ -65,8 +69,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'सेटिंग्ज',
-          tabBarLabel: 'सेटिंग्ज',
+          title: t.settingsTitle,
+          tabBarLabel: t.tabSettings,
           tabBarIcon: ({ color, size }) => (
             <Feather name="settings" size={size} color={color} />
           ),

@@ -1,10 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { useTheme } from '../src/hooks/useTheme';
+import { useSettingsStore } from '../src/store';
+import { getTranslation } from '../src/utils/i18n';
 import { borderRadius, fonts, spacing } from '../src/theme/theme';
 
 export default function AboutScreen() {
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
+  const t = getTranslation(lang);
 
   return (
     <ScrollView
@@ -12,70 +16,72 @@ export default function AboutScreen() {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.header}>
-        <View style={[styles.logoBadge, { backgroundColor: colors.primary }]}>
-          <Text style={styles.logoIcon}>🪔</Text>
+      <View style={styles.responsiveWrapper}>
+        <View style={styles.header}>
+          <View style={[styles.logoBadge, { backgroundColor: colors.primary }]}>
+            <Text style={styles.logoIcon}>🪔</Text>
+          </View>
+          <Text style={[styles.appName, { color: colors.primary }]}>{t.appName}</Text>
+          <Text style={[styles.version, { color: colors.textSecondary }]}>
+            {t.version} १.०.० (v1.0.0)
+          </Text>
         </View>
-        <Text style={[styles.appName, { color: colors.primary }]}>आरती संग्रह</Text>
-        <Text style={[styles.version, { color: colors.textSecondary }]}>
-          आवृत्ती १.०.० (v1.0.0)
+
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
+          ]}
+        >
+          <Text style={[styles.cardTitle, { color: colors.primary }]}>
+            {t.aboutTitle}
+          </Text>
+          <Text style={[styles.cardText, { color: colors.textPrimary }]}>
+            {t.aboutDesc}
+          </Text>
+        </View>
+
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
+          ]}
+        >
+          <Text style={[styles.cardTitle, { color: colors.primary }]}>
+            {t.sourceCreditsTitle}
+          </Text>
+          <Text style={[styles.cardText, { color: colors.textPrimary }]}>
+            {t.sourceCreditsDesc}
+          </Text>
+        </View>
+
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
+          ]}
+        >
+          <Text style={[styles.cardTitle, { color: colors.primary }]}>
+            {t.keyFeaturesTitle}
+          </Text>
+          <Text style={[styles.bullet, { color: colors.textPrimary }]}>
+            {t.feature1}
+          </Text>
+          <Text style={[styles.bullet, { color: colors.textPrimary }]}>
+            {t.feature2}
+          </Text>
+          <Text style={[styles.bullet, { color: colors.textPrimary }]}>
+            {t.feature3}
+          </Text>
+          <Text style={[styles.bullet, { color: colors.textPrimary }]}>
+            {t.feature4}
+          </Text>
+        </View>
+
+        <Text style={[styles.footerText, { color: colors.textSecondary }]}>
+          {t.shlokaFooter}
         </Text>
       </View>
-
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
-        ]}
-      >
-        <Text style={[styles.cardTitle, { color: colors.primary }]}>
-          ॲप बद्दल (About App)
-        </Text>
-        <Text style={[styles.cardText, { color: colors.textPrimary }]}>
-          "आरती संग्रह" हे खास दैनिक पूजा, सण-उत्सव आणि नित्यपाठासाठी तयार केलेले एक सुंदर व सोपे मराठी आरती ॲप आहे. या मध्ये गणपती, विठ्ठल, शंकर, देवी आणि विविध देवतांच्या ७६ पारंपरिक आरत्यांचा समावेश आहे.
-        </Text>
-      </View>
-
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
-        ]}
-      >
-        <Text style={[styles.cardTitle, { color: colors.primary }]}>
-          स्त्रोत व आभार (Source Material Credits)
-        </Text>
-        <Text style={[styles.cardText, { color: colors.textPrimary }]}>
-          या ॲपमधील सर्व आरत्या या पारंपरिक मराठी आरती संग्रहातून संकलित केल्या गेल्या आहेत. या शतकानुशतके चालत आलेल्या सार्वजनिक क्षेत्रातील (Public Domain) भक्ती रचना आहेत.
-        </Text>
-      </View>
-
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
-        ]}
-      >
-        <Text style={[styles.cardTitle, { color: colors.primary }]}>
-          वैशिष्ट्ये (Key Features)
-        </Text>
-        <Text style={[styles.bullet, { color: colors.textPrimary }]}>
-          • वाचनासाठी सुलभ व मोठे देवनागरी अक्षर (Font Control)
-        </Text>
-        <Text style={[styles.bullet, { color: colors.textPrimary }]}>
-          • ऑडिओ विरहित - केवळ वाचनावर लक्ष केंद्रित (Zero Audio Distraction)
-        </Text>
-        <Text style={[styles.bullet, { color: colors.textPrimary }]}>
-          • आवडत्या आरत्या साठवण्याची सोय (Favorites)
-        </Text>
-        <Text style={[styles.bullet, { color: colors.textPrimary }]}>
-          • लाईट व डार्क थीम पर्याय (Light & Dark Theme)
-        </Text>
-      </View>
-
-      <Text style={[styles.footerText, { color: colors.textSecondary }]}>
-        ॥ सर्व मंगल मांगल्ये शिवे सर्वार्थ साधिके ॥
-      </Text>
     </ScrollView>
   );
 }
@@ -87,6 +93,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: spacing.md,
     paddingBottom: spacing.xxl,
+    alignItems: 'center',
+  },
+  responsiveWrapper: {
+    width: '100%',
+    maxWidth: 720,
   },
   header: {
     alignItems: 'center',

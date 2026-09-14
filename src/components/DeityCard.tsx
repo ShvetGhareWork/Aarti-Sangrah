@@ -5,20 +5,28 @@ import { Feather } from '@expo/vector-icons';
 import { Deity } from '../types';
 import { useTheme } from '../hooks/useTheme';
 import { borderRadius, fonts, spacing } from '../theme/theme';
+import { useSettingsStore } from '../store';
+import { getTranslation } from '../utils/i18n';
 
 interface DeityCardProps {
   deity: Deity;
   variant?: 'grid' | 'list';
+  cardWidth?: any;
 }
 
-export const DeityCard: React.FC<DeityCardProps> = ({ deity, variant = 'grid' }) => {
+export const DeityCard: React.FC<DeityCardProps> = ({ deity, variant = 'grid', cardWidth }) => {
   const router = useRouter();
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
+  const t = getTranslation(lang);
+
+  const displayName = lang === 'en' && deity.nameEn ? deity.nameEn : deity.name;
 
   return (
     <Pressable
       style={({ pressed }) => [
         variant === 'grid' ? styles.gridCard : styles.listCard,
+        cardWidth && variant === 'grid' ? { width: cardWidth } : null,
         {
           backgroundColor: colors.cardBackground,
           borderColor: colors.cardBorder,
@@ -36,10 +44,10 @@ export const DeityCard: React.FC<DeityCardProps> = ({ deity, variant = 'grid' })
 
       <View style={styles.infoContainer}>
         <Text style={[styles.name, { color: colors.textPrimary }]} numberOfLines={1}>
-          {deity.name}
+          {displayName}
         </Text>
         <Text style={[styles.count, { color: colors.textSecondary }]}>
-          {deity.aartiCount} {deity.aartiCount === 1 ? 'आरती' : 'आरत्या'}
+          {deity.aartiCount} {t.aartisCountSuffix}
         </Text>
       </View>
 
@@ -57,7 +65,6 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '48%',
     marginBottom: spacing.md,
     elevation: 1,
     ...Platform.select({

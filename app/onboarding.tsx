@@ -4,7 +4,7 @@ import {
   Text,
   View,
   FlatList,
-  Dimensions,
+  useWindowDimensions,
   Pressable,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -13,38 +13,40 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSettingsStore } from '../src/store';
 import { useTheme } from '../src/hooks/useTheme';
+import { getTranslation } from '../src/utils/i18n';
 import { borderRadius, fonts, spacing } from '../src/theme/theme';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const SLIDES = [
-  {
-    id: '1',
-    emoji: '🛕',
-    title: 'देवतेनुसार आरत्या शोधा',
-    description: 'गणपती, विठ्ठल, शंकर, देवी आणि सर्व देवतांच्या आरत्या एकाच ठिकाणी सोप्या पद्धतीने उपलब्ध.',
-  },
-  {
-    id: '2',
-    emoji: '📖',
-    title: 'सुलभ व स्पष्ट वाचन',
-    description: 'पूजा करताना मोठ्या व स्पष्ट देवनागरी अक्षरांमध्ये सहजरीत्या आरती वाचा. गरजेनुसार फॉन्ट साईज बदला.',
-  },
-  {
-    id: '3',
-    emoji: '⭐',
-    title: 'आवडत्या आरत्या साठवा',
-    description: 'तुमच्या रोजच्या पूजेच्या आरत्या बुकमार्क करा जेणेकरून त्या एका क्लिकवर त्वरित मिळतील.',
-  },
-];
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { width: windowWidth } = useWindowDimensions();
   const { colors } = useTheme();
+  const lang = useSettingsStore((state) => state.language);
   const setHasCompletedOnboarding = useSettingsStore(
     (state) => state.setHasCompletedOnboarding
   );
+  const t = getTranslation(lang);
+
+  const slides = [
+    {
+      id: '1',
+      emoji: '🛕',
+      title: t.onboarding1Title,
+      description: t.onboarding1Desc,
+    },
+    {
+      id: '2',
+      emoji: '📖',
+      title: t.onboarding2Title,
+      description: t.onboarding2Desc,
+    },
+    {
+      id: '3',
+      emoji: '⭐',
+      title: t.onboarding3Title,
+      description: t.onboarding3Desc,
+    },
+  ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
@@ -55,7 +57,7 @@ export default function OnboardingScreen() {
   };
 
   const handleNext = () => {
-    if (currentIndex < SLIDES.length - 1) {
+    if (currentIndex < slides.length - 1) {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
     } else {
       handleFinish();
@@ -64,8 +66,8 @@ export default function OnboardingScreen() {
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const x = e.nativeEvent.contentOffset.x;
-    const index = Math.round(x / SCREEN_WIDTH);
-    if (index !== currentIndex && index >= 0 && index < SLIDES.length) {
+    const index = Math.round(x / windowWidth);
+    if (index !== currentIndex && index >= 0 && index < slides.length) {
       setCurrentIndex(index);
     }
   };
@@ -83,10 +85,10 @@ export default function OnboardingScreen() {
     >
       {/* Top Header / Skip Button */}
       <View style={styles.header}>
-        {currentIndex < SLIDES.length - 1 ? (
+        {currentIndex < slides.length - 1 ? (
           <Pressable onPress={handleFinish} hitSlop={12}>
             <Text style={[styles.skipText, { color: colors.textSecondary }]}>
-              वगळा (Skip)
+              {t.skip}
             </Text>
           </Pressable>
         ) : (
@@ -97,7 +99,7 @@ export default function OnboardingScreen() {
       {/* Slides Carousel */}
       <FlatList
         ref={flatListRef}
-        data={SLIDES}
+        data={slides}
         keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
@@ -105,7 +107,7 @@ export default function OnboardingScreen() {
         onScroll={onScroll}
         scrollEventThrottle={16}
         renderItem={({ item }) => (
-          <View style={[styles.slide, { width: SCREEN_WIDTH }]}>
+          <View style={[styles.slide, { width: windowWidth }]}>
             <View style={[styles.emojiCircle, { backgroundColor: colors.inputBackground }]}>
               <Text style={styles.emoji}>{item.emoji}</Text>
             </View>
@@ -119,9 +121,8 @@ export default function OnboardingScreen() {
 
       {/* Footer Controls */}
       <View style={styles.footer}>
-        {/* Pagination Dots */}
         <View style={styles.pagination}>
-          {SLIDES.map((_, index) => (
+          {slides.map((_, index) => (
             <View
               key={index}
               style={[
@@ -136,7 +137,6 @@ export default function OnboardingScreen() {
           ))}
         </View>
 
-        {/* Action Button */}
         <Pressable
           style={({ pressed }) => [
             styles.button,
@@ -148,7 +148,7 @@ export default function OnboardingScreen() {
           onPress={handleNext}
         >
           <Text style={styles.buttonText}>
-            {currentIndex === SLIDES.length - 1 ? 'सुरू करा (Get Started)' : 'पुढे चला'}
+            {currentIndex === slides.length - 1 ? t.getStarted : t.next}
           </Text>
         </Pressable>
       </View>

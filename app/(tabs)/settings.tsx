@@ -13,19 +13,22 @@ import { useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useSettingsStore, useFavoritesStore } from '../../src/store';
 import { useTheme } from '../../src/hooks/useTheme';
+import { getTranslation } from '../../src/utils/i18n';
 import { borderRadius, fonts, spacing } from '../../src/theme/theme';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const { colors, isDark } = useTheme();
-  const { toggleTheme, fontSize, setFontSize } = useSettingsStore();
+  const { toggleTheme, fontSize, setFontSize, language, toggleLanguage } =
+    useSettingsStore();
   const clearFavorites = useFavoritesStore((state) => state.clearFavorites);
+  const t = getTranslation(language);
 
   const handleShareApp = async () => {
     try {
       await Share.share({
         message:
-          '🙏 आरती संग्रह - रोजच्या पूजेसाठी सर्व मराठी आरत्या एकाच ठिकाणी वाचा. [https://example.com/aarti-sangraha]',
+          '🙏 आरती संग्रह - रोजच्या पूजेसाठी सर्व आरती एकाच ठिकाणी वाचा / Read Marathi Aarti Sangraha for daily pooja. [https://example.com/aarti-sangraha]',
       });
     } catch (error) {
       console.log('Share error:', error);
@@ -34,12 +37,12 @@ export default function SettingsScreen() {
 
   const handleClearFavorites = () => {
     Alert.alert(
-      'आवडत्या आरत्या हटवा',
-      'तुम्हाला नक्की सर्व आवडत्या आरत्या यादीतून हटवायच्या आहेत का?',
+      t.clearFavoritesConfirmTitle,
+      t.clearFavoritesConfirmMsg,
       [
-        { text: 'रद्द करा', style: 'cancel' },
+        { text: t.cancel, style: 'cancel' },
         {
-          text: 'हटवा',
+          text: t.delete,
           style: 'destructive',
           onPress: () => clearFavorites(),
         },
@@ -52,113 +55,136 @@ export default function SettingsScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.contentContainer}
     >
-      {/* Theme Section */}
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-        देखावा (APPEARANCE)
-      </Text>
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
-        ]}
-      >
-        <View style={styles.row}>
-          <View style={styles.rowLeft}>
-            <Feather name={isDark ? 'moon' : 'sun'} size={20} color={colors.primary} />
-            <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-              डार्क थीम (Dark Theme)
-            </Text>
+      <View style={styles.responsiveWrapper}>
+        {/* Appearance Section */}
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+          {t.appearance}
+        </Text>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
+          ]}
+        >
+          {/* Theme Toggle */}
+          <View style={styles.row}>
+            <View style={styles.rowLeft}>
+              <Feather name={isDark ? 'moon' : 'sun'} size={20} color={colors.primary} />
+              <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
+                {t.darkTheme}
+              </Text>
+            </View>
+            <Switch
+              value={isDark}
+              onValueChange={toggleTheme}
+              trackColor={{ false: colors.cardBorder, true: colors.accent }}
+              thumbColor="#FFFFFF"
+            />
           </View>
-          <Switch
-            value={isDark}
-            onValueChange={toggleTheme}
-            trackColor={{ false: colors.cardBorder, true: colors.accent }}
-            thumbColor="#FFFFFF"
-          />
-        </View>
 
-        <View style={[styles.divider, { backgroundColor: colors.cardBorder }]} />
+          <View style={[styles.divider, { backgroundColor: colors.cardBorder }]} />
 
-        {/* Default Font Size */}
-        <View style={styles.row}>
-          <View style={styles.rowLeft}>
-            <Feather name="type" size={20} color={colors.primary} />
-            <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-              अक्षरांचा आकार (Font Size)
-            </Text>
-          </View>
-          <View style={styles.fontSizeControls}>
+          {/* Language Toggle */}
+          <View style={styles.row}>
+            <View style={styles.rowLeft}>
+              <Feather name="globe" size={20} color={colors.primary} />
+              <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
+                {t.language}
+              </Text>
+            </View>
             <Pressable
-              style={[styles.fontBtn, { backgroundColor: colors.inputBackground }]}
-              onPress={() => setFontSize(Math.max(14, fontSize - 2))}
+              style={[styles.pillBtn, { backgroundColor: colors.inputBackground }]}
+              onPress={toggleLanguage}
             >
-              <Text style={[styles.fontBtnText, { color: colors.primary }]}>-</Text>
-            </Pressable>
-            <Text style={[styles.fontSizeValue, { color: colors.textPrimary }]}>
-              {fontSize}px
-            </Text>
-            <Pressable
-              style={[styles.fontBtn, { backgroundColor: colors.inputBackground }]}
-              onPress={() => setFontSize(Math.min(32, fontSize + 2))}
-            >
-              <Text style={[styles.fontBtnText, { color: colors.primary }]}>+</Text>
+              <Text style={[styles.pillBtnText, { color: colors.primary }]}>
+                {language === 'mr' ? t.mrLanguageLabel : t.enLanguageLabel}
+              </Text>
             </Pressable>
           </View>
+
+          <View style={[styles.divider, { backgroundColor: colors.cardBorder }]} />
+
+          {/* Default Font Size */}
+          <View style={styles.row}>
+            <View style={styles.rowLeft}>
+              <Feather name="type" size={20} color={colors.primary} />
+              <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
+                {t.fontSize}
+              </Text>
+            </View>
+            <View style={styles.fontSizeControls}>
+              <Pressable
+                style={[styles.fontBtn, { backgroundColor: colors.inputBackground }]}
+                onPress={() => setFontSize(Math.max(14, fontSize - 2))}
+              >
+                <Text style={[styles.fontBtnText, { color: colors.primary }]}>-</Text>
+              </Pressable>
+              <Text style={[styles.fontSizeValue, { color: colors.textPrimary }]}>
+                {fontSize}px
+              </Text>
+              <Pressable
+                style={[styles.fontBtn, { backgroundColor: colors.inputBackground }]}
+                onPress={() => setFontSize(Math.min(32, fontSize + 2))}
+              >
+                <Text style={[styles.fontBtnText, { color: colors.primary }]}>+</Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
-      </View>
 
-      {/* Data Management Section */}
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-        माहिती (DATA MANAGEMENT)
-      </Text>
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
-        ]}
-      >
-        <Pressable style={styles.row} onPress={handleClearFavorites}>
-          <View style={styles.rowLeft}>
-            <Feather name="trash-2" size={20} color={colors.danger} />
-            <Text style={[styles.rowLabel, { color: colors.danger }]}>
-              सर्व आवडत्या आरत्या हटवा
-            </Text>
-          </View>
-          <Feather name="chevron-right" size={20} color={colors.textSecondary} />
-        </Pressable>
-      </View>
+        {/* Data Management Section */}
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+          {t.dataManagement}
+        </Text>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
+          ]}
+        >
+          <Pressable style={styles.row} onPress={handleClearFavorites}>
+            <View style={styles.rowLeft}>
+              <Feather name="trash-2" size={20} color={colors.danger} />
+              <Text style={[styles.rowLabel, { color: colors.danger }]}>
+                {t.clearAllFavorites}
+              </Text>
+            </View>
+            <Feather name="chevron-right" size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
 
-      {/* App & Info Section */}
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-        इतर (OTHER)
-      </Text>
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
-        ]}
-      >
-        <Pressable style={styles.row} onPress={handleShareApp}>
-          <View style={styles.rowLeft}>
-            <Feather name="share-2" size={20} color={colors.primary} />
-            <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-              ॲप शेअर करा (Share App)
-            </Text>
-          </View>
-          <Feather name="chevron-right" size={20} color={colors.textSecondary} />
-        </Pressable>
+        {/* Other Section */}
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+          {t.other}
+        </Text>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder },
+          ]}
+        >
+          <Pressable style={styles.row} onPress={handleShareApp}>
+            <View style={styles.rowLeft}>
+              <Feather name="share-2" size={20} color={colors.primary} />
+              <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
+                {t.shareApp}
+              </Text>
+            </View>
+            <Feather name="chevron-right" size={20} color={colors.textSecondary} />
+          </Pressable>
 
-        <View style={[styles.divider, { backgroundColor: colors.cardBorder }]} />
+          <View style={[styles.divider, { backgroundColor: colors.cardBorder }]} />
 
-        <Pressable style={styles.row} onPress={() => router.push('/about')}>
-          <View style={styles.rowLeft}>
-            <Feather name="info" size={20} color={colors.primary} />
-            <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-              ॲप बद्दल (About)
-            </Text>
-          </View>
-          <Feather name="chevron-right" size={20} color={colors.textSecondary} />
-        </Pressable>
+          <Pressable style={styles.row} onPress={() => router.push('/about')}>
+            <View style={styles.rowLeft}>
+              <Feather name="info" size={20} color={colors.primary} />
+              <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
+                {t.aboutApp}
+              </Text>
+            </View>
+            <Feather name="chevron-right" size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
       </View>
     </ScrollView>
   );
@@ -171,6 +197,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: spacing.md,
     paddingBottom: spacing.xxl,
+    alignItems: 'center',
+  },
+  responsiveWrapper: {
+    width: '100%',
+    maxWidth: 720,
   },
   sectionTitle: {
     fontFamily: fonts.poppins.semiBold,
@@ -202,6 +233,15 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
+  },
+  pillBtn: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
+    borderRadius: borderRadius.pill,
+  },
+  pillBtnText: {
+    fontFamily: fonts.poppins.semiBold,
+    fontSize: 13,
   },
   fontSizeControls: {
     flexDirection: 'row',
